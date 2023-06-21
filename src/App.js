@@ -6,7 +6,7 @@ function App() {
 
   const handleAddTodo = () => {
     if (newTodo !== "") {
-      setTodos([...todos, newTodo]);
+      setTodos([...todos, { task: newTodo, done: false }]);
       setNewTodo("");
     }
   };
@@ -15,6 +15,18 @@ function App() {
     const newTodos = [...todos];
     newTodos.splice(index, 1);
     setTodos(newTodos);
+  };
+
+  const handleToggleTodo = (index) => {
+    const newTodos = [...todos];
+    newTodos[index].done = !newTodos[index].done;
+    setTodos(newTodos);
+  };
+
+  const calculateProgress = () => {
+    const completedTasks = todos.filter((todo) => todo.done);
+    const totalTasks = todos.length;
+    return `${completedTasks.length} of ${totalTasks} completed`;
   };
 
   return (
@@ -29,11 +41,17 @@ function App() {
       <ul>
         {todos.map((todo, index) => (
           <li key={index}>
-            {todo}{" "}
+            <input
+              type="checkbox"
+              checked={todo.done}
+              onChange={() => handleToggleTodo(index)}
+            />
+            {todo.task}{" "}
             <button onClick={() => handleDeleteTodo(index)}>Delete</button>
           </li>
         ))}
       </ul>
+      <p>Progress: {calculateProgress()}</p>
     </div>
   );
 }
